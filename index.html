@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AEK Matemáticas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500;700&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<style>
+:root{
+  --paper:#f8f9fc; --surface:#ffffff; --ink:#15203a; --muted:#5a6681; --line:#dde2ec;
+  --grid:rgba(35,70,200,.08); --blue:#2346c8; --blue-soft:#e8edfc; --red:#c4332a; --red-soft:#fbeceb;
+  --green:#1d7a4b; --green-soft:#e5f4ec; --amber:#9a5c00; --amber-soft:#fbf1df;
+  --f-display:"Schibsted Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --paper:#0e1320; --surface:#151c2d; --ink:#e6eaf4; --muted:#97a2bc; --line:#28324a;
+  --grid:rgba(142,166,255,.07); --blue:#8ea6ff; --blue-soft:#1d2747; --red:#ff8073; --red-soft:#3a1d1c;
+  --green:#5fd39a; --green-soft:#16302a; --amber:#f0b45a; --amber-soft:#33281a; color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+.wrap{max-width:900px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.band{border-bottom:1px solid var(--line);background-color:var(--surface);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:22px 22px}
+header .wrap{padding-block:20px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(1.5rem,4vw,2.1rem);line-height:1.1;margin:0;letter-spacing:-.01em}
+h1 .x{color:var(--red)}
+.sub{color:var(--muted);margin:4px 0 0;font-size:.95rem}
+h2{font-family:var(--f-display);font-weight:700;font-size:1.25rem;margin:0}
+h3{font-family:var(--f-display);font-weight:700;font-size:1.08rem;margin:0}
+main{padding-block:20px 60px;display:flex;flex-direction:column;gap:18px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{border:0;background:none;font:inherit;font-weight:700;color:var(--muted);padding:10px 14px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+.tabs button[aria-pressed="true"]{color:var(--ink);border-bottom-color:var(--red)}
+.tabs .n{font-family:var(--f-mono);font-size:.75rem;background:var(--red-soft);color:var(--red);border-radius:999px;padding:1px 7px;margin-left:6px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;background:var(--surface);padding:3px;gap:2px}
+.seg button{border:0;background:none;color:var(--muted);font:inherit;font-size:.9rem;padding:6px 14px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.between{justify-content:space-between}
+.end{justify-content:flex-end}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+.label{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.stmt{white-space:pre-wrap;overflow-wrap:anywhere;overflow-x:auto}
+.answer{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--paper);border:1px dashed var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto}
+.pill{font-size:.78rem;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.p-blue{background:var(--blue-soft);color:var(--blue)}
+.p-red{background:var(--red-soft);color:var(--red)}
+.p-green{background:var(--green-soft);color:var(--green)}
+.p-amber{background:var(--amber-soft);color:var(--amber)}
+.p-grey{background:var(--paper);color:var(--muted);border:1px solid var(--line)}
+.score{font-family:var(--f-mono);font-weight:700;font-variant-numeric:tabular-nums}
+.big{font-size:1.5rem;color:var(--red)}
+label.f{display:flex;flex-direction:column;gap:5px;font-weight:700;font-size:.9rem;min-width:0}
+label.f span.h{font-weight:400;color:var(--muted);font-size:.82rem}
+input[type=text],input[type=password],input[type=number],textarea,select{font:inherit;font-weight:400;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%}
+textarea{min-height:110px;resize:vertical;line-height:1.5}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.scorerow{display:grid;grid-template-columns:minmax(0,140px) 1fr;gap:12px}
+@media (max-width:620px){.grid2,.grid3,.scorerow{grid-template-columns:1fr}}
+.btn{font:inherit;font-weight:700;font-size:.92rem;border-radius:8px;padding:9px 15px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--blue);border-color:var(--blue);color:var(--surface)}
+.btn.red{background:var(--red);border-color:var(--red);color:var(--surface)}
+.btn.ghost{border-color:transparent;background:none;color:var(--muted);padding-inline:8px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.ai{border-left:3px solid var(--blue);background:var(--blue-soft);border-radius:0 8px 8px 0;padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.pen{border-left:3px solid var(--red);background:var(--red-soft);border-radius:0 8px 8px 0;padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.ok{border-left:3px solid var(--green);background:var(--green-soft);border-radius:0 8px 8px 0;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.ai ul{margin:0;padding-left:20px}
+.preview{font-size:.95rem;min-height:1.5em;overflow-x:auto}
+.empty{text-align:center;padding:34px 18px;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r);background:var(--surface)}
+.empty b{display:block;color:var(--ink);font-family:var(--f-display);font-size:1.1rem;margin-bottom:4px}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+tr:last-child td{border-bottom:0}
+.mono{font-family:var(--f-mono)}
+.login{max-width:400px;margin:40px auto 0;width:100%}
+.err{color:var(--red);font-size:.9rem}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:8px;font-size:.92rem;max-width:calc(100% - 32px);box-shadow:0 6px 24px rgba(0,0,0,.18);z-index:20}
+[hidden]{display:none!important}
+mjx-container{max-width:100%;overflow-x:auto;overflow-y:hidden}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="band"><div class="wrap">
+  <div>
+    <h1>AEK Matemáticas<span class="x">.</span></h1>
+    <p class="sub" id="who">Cargando…</p>
+  </div>
+  <div id="headRight" class="row"></div>
+</div></header>
+<main class="wrap" id="app">
+  <div class="empty"><b>Cargando…</b>Conectando con el aula.</div>
+</main>
+<div id="toast" hidden></div>
+
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},svg:{fontCache:'global'},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code','input','select']},startup:{typeset:false}};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const S={cfg:null,session:null,perfil:null,teacher:false,tab:'entregas',filter:'pend',probFilter:'',
+  problemas:[],claves:{},entregas:[],correcciones:{},notas:{},perfiles:{},usuarios:{},
+  drafts:{},rev:{},busy:{},form:null,editing:null,confirmDel:null,nuevo:{nombre:'',grupo:'',usuario:''},credenciales:null,loginErr:''};
+let sb=null;
+const $=s=>document.querySelector(s);
+const app=$('#app');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtN=n=>(n==null||n===''||isNaN(n))?'—':Number(n).toLocaleString('es-ES',{maximumFractionDigits:2});
+const fmtD=t=>t?new Date(t).toLocaleString('es-ES',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'';
+const nombreDe=id=>(S.perfiles[id]&&S.perfiles[id].nombre)||'Alumno sin nombre';
+const usuarioDe=id=>{const e=S.usuarios[id];if(!e)return '';const d='@'+S.cfg.dominio;return e.endsWith(d)?e.slice(0,-d.length):e};
+const sugerirUsuario=n=>String(n||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim().replace(/\s+/g,'.').replace(/[^a-z0-9._-]/g,'');
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,4200)}
+
+/* ---------- arranque ---------- */
+(async function boot(){
+  try{const r=await fetch('/api/config');S.cfg=await r.json()}catch(e){S.cfg=null}
+  if(!S.cfg||!S.cfg.url||!S.cfg.key){$('#who').textContent='Configuración pendiente';
+    app.innerHTML=`<div class="empty"><b>Falta conectar la base de datos</b>Añade SUPABASE_URL y SUPABASE_ANON_KEY en Vercel (Settings → Environment Variables) y vuelve a publicar.</div>`;return}
+  if(!window.supabase){app.innerHTML=`<div class="empty"><b>No se ha podido cargar la página</b>Revisa tu conexión y recarga.</div>`;return}
+  sb=window.supabase.createClient(S.cfg.url,S.cfg.key);
+  const {data}=await sb.auth.getSession();
+  S.session=data.session;
+  sb.auth.onAuthStateChange((ev,ses)=>{S.session=ses;if(ev==='SIGNED_OUT'){S.perfil=null;render()}});
+  if(S.session)await entrar();else render();
+})();
+
+async function entrar(){
+  const {data,error}=await sb.from('perfiles').select('*').eq('id',S.session.user.id).maybeSingle();
+  if(error||!data){toast('No se ha encontrado tu perfil. Avisa al profesor.');await sb.auth.signOut();return}
+  S.perfil=data;S.teacher=data.rol==='profesor';S.tab=S.teacher?'entregas':'';
+  await cargar();
+}
+async function cargar(){
+  const idx=(arr,k)=>{const m={};(arr||[]).forEach(x=>m[x[k]]=x);return m};
+  if(S.teacher){
+    const [p,c,e,co,n,pf]=await Promise.all([
+      sb.from('problemas').select('*').order('creado_at'),
+      sb.from('claves').select('*'),
+      sb.from('entregas').select('*').order('enviada_at',{ascending:false}),
+      sb.from('correcciones').select('*'),
+      sb.from('notas').select('*'),
+      sb.from('perfiles').select('*')]);
+    S.problemas=p.data||[];S.claves=idx(c.data,'problema_id');S.entregas=e.data||[];
+    S.correcciones=idx(co.data,'entrega_id');S.notas=idx(n.data,'entrega_id');S.perfiles=idx(pf.data,'id');
+    cargarUsuarios();
+  }else{
+    const [p,e,n]=await Promise.all([
+      sb.from('problemas').select('*').order('creado_at'),
+      sb.from('entregas').select('*'),
+      sb.from('notas').select('*')]);
+    S.problemas=p.data||[];S.entregas=e.data||[];S.notas=idx(n.data,'entrega_id');
+  }
+  render();
+}
+async function api(path,opts={}){
+  const r=await fetch(path,{...opts,headers:{'Content-Type':'application/json',Authorization:'Bearer '+(S.session&&S.session.access_token),...(opts.headers||{})}});
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(d.error||'No se ha podido completar. Vuelve a intentarlo.');
+  return d;
+}
+async function cargarUsuarios(){try{const d=await api('/api/alumnos');const m={};d.usuarios.forEach(u=>m[u.id]=u.email);S.usuarios=m;render()}catch(e){console.warn(e)}}
+
+/* ---------- render ---------- */
+let rq=false;function render(){if(rq)return;rq=true;requestAnimationFrame(()=>{rq=false;pintar()})}
+function pintar(){
+  const a=document.activeElement,fid=a&&a.id,ss=a&&a.selectionStart,se=a&&a.selectionEnd,sy=window.scrollY;
+  if(!S.session||!S.perfil){
+    $('#who').textContent='Entra con tu usuario';$('#headRight').innerHTML='';
+    app.innerHTML=vistaLogin();
+  }else{
+    $('#who').textContent=(S.teacher?'Panel del profesor · ':'')+(S.perfil.nombre||'');
+    $('#headRight').innerHTML=`<button class="btn ghost small" data-act="recargar">Actualizar</button><button class="btn small" data-act="salir">Salir</button>`;
+    if(window.MathJax&&MathJax.typesetClear)try{MathJax.typesetClear([app])}catch(e){}
+    app.innerHTML=S.teacher?vistaProfesor():vistaAlumno();
+  }
+  if(fid){const n=document.getElementById(fid);if(n){n.focus({preventScroll:true});try{n.setSelectionRange(ss,se)}catch(e){}}}
+  window.scrollTo(0,sy);
+  typeset(app);
+}
+function typeset(el){if(window.MathJax&&MathJax.typesetPromise){MathJax.typesetPromise([el]).catch(()=>{})}else setTimeout(()=>typeset(el),400)}
+
+function vistaLogin(){
+  return `<form class="card login" id="loginForm"><h2>Entrar</h2>
+  <label class="f" for="lg-user">Usuario<span class="h">Alumnos: el usuario que os ha dado el profesor. Profesores: vuestro email.</span><input type="text" id="lg-user" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
+  <label class="f" for="lg-pass">Contraseña<input type="password" id="lg-pass" autocomplete="current-password"></label>
+  ${S.loginErr?`<div class="err">${esc(S.loginErr)}</div>`:''}
+  <button class="btn pri" type="submit" ${S.busy.login?'disabled':''}>${S.busy.login?'Entrando…':'Entrar'}</button>
+  <p class="small muted" style="margin:0">¿Has olvidado la contraseña? Pídele una nueva al profesor.</p></form>`;
+}
+
+/* ---------- alumno ---------- */
+function vistaAlumno(){
+  const mias={};S.entregas.forEach(e=>mias[e.problema_id]=e);
+  if(!S.problemas.length)return `<div class="empty"><b>Aún no hay problemas publicados</b>Cuando el profesor publique uno, aparecerá aquí.</div>`;
+  const hechos=S.problemas.filter(p=>mias[p.id]).length,corr=S.problemas.filter(p=>mias[p.id]&&S.notas[mias[p.id].id]).length;
+  let h=`<div class="row small muted"><span>${S.problemas.length} problemas</span>·<span>${hechos} enviados</span>·<span>${corr} corregidos</span></div>`;
+  for(const p of S.problemas){
+    const e=mias[p.id],n=e&&S.notas[e.id];
+    const st=n?`<span class="pill p-green">Corregido</span>`:e?`<span class="pill p-blue">Enviado · en revisión</span>`:p.abierto?`<span class="pill p-amber">Pendiente</span>`:`<span class="pill p-grey">Cerrado</span>`;
+    h+=`<article class="card"><div class="row between"><h3>${esc(p.titulo)}</h3><div class="row">${st}<span class="score small muted">${fmtN(p.puntos)} pt</span></div></div>
+    <div class="stmt">${esc(p.enunciado)}</div>`;
+    if(n){
+      h+=`<div class="pen"><div class="row between"><span class="label">Nota del profesor</span><span class="score big">${fmtN(n.nota)}<span class="muted small"> / ${fmtN(p.puntos)}</span></span></div>${n.comentario?`<div class="stmt">${esc(n.comentario)}</div>`:''}</div>
+      <div><span class="label">Tu respuesta</span><div class="answer">${esc(e.respuesta)}</div></div>`;
+    }else{
+      const bloqueado=!p.abierto;
+      const val=S.drafts[p.id]??(e?e.respuesta:'');
+      h+=`<label class="f" for="ans-${p.id}">Tu respuesta <span class="h">Explica los pasos. Puedes escribir fórmulas entre símbolos de dólar, por ejemplo $x^2+3x-4=0$.</span>
+      <textarea id="ans-${p.id}" data-draft="${p.id}" ${bloqueado?'disabled':''}>${esc(val)}</textarea></label>
+      <div><span class="label">Vista previa</span><div class="preview stmt" id="prev-${p.id}">${esc(val)||'<span class="muted">Escribe tu respuesta para ver cómo queda.</span>'}</div></div>
+      <div class="row between"><span class="small muted">${e?`Enviada el ${fmtD(e.enviada_at)}. Puedes cambiarla hasta que el profesor publique la nota.`:bloqueado?'Este problema ya no admite respuestas.':''}</span>
+      <button class="btn pri" data-act="enviar" data-pid="${p.id}" ${bloqueado||S.busy['s'+p.id]?'disabled':''}>${e?'Actualizar respuesta':'Enviar respuesta'}</button></div>`;
+    }
+    h+=`</article>`;
+  }
+  return h;
+}
+
+/* ---------- profesor ---------- */
+function todas(){
+  const out=[];
+  for(const e of S.entregas){const p=S.problemas.find(x=>x.id===e.problema_id);if(!p)continue;
+    const c=S.correcciones[e.id],n=S.notas[e.id];let st='new';
+    if(n)st='pub';else if(c)st=(c.para_enviada_at&&new Date(c.para_enviada_at).getTime()===new Date(e.enviada_at).getTime())?'ai':'changed';
+    out.push({e,p,c,n,st});}
+  return out;
+}
+const EST={new:['Sin corregir','p-amber'],ai:['Propuesta de la IA','p-blue'],changed:['Respuesta cambiada','p-red'],pub:['Nota publicada','p-green']};
+function vistaProfesor(){
+  const subs=todas(),pend=subs.filter(s=>s.st!=='pub').length;
+  const nAl=Object.values(S.perfiles).filter(p=>p.rol==='alumno').length;
+  let h=`<nav class="tabs"><button data-act="tab" data-v="entregas" aria-pressed="${S.tab==='entregas'}">Entregas${pend?`<span class="n">${pend}</span>`:''}</button>
+  <button data-act="tab" data-v="problemas" aria-pressed="${S.tab==='problemas'}">Problemas</button>
+  <button data-act="tab" data-v="alumnos" aria-pressed="${S.tab==='alumnos'}">Alumnos <span class="muted small">${nAl}</span></button>
+  <button data-act="tab" data-v="notas" aria-pressed="${S.tab==='notas'}">Notas</button></nav>`;
+  if(S.tab==='problemas')h+=tabProblemas();else if(S.tab==='alumnos')h+=tabAlumnos();else if(S.tab==='notas')h+=tabNotas();else h+=tabEntregas(subs);
+  return h;
+}
+function tabEntregas(subs){
+  let list=subs;
+  if(S.filter==='pend')list=list.filter(s=>s.st!=='pub');
+  if(S.probFilter)list=list.filter(s=>s.p.id===S.probFilter);
+  const sinIA=list.filter(s=>s.st==='new'||s.st==='changed');
+  let h=`<div class="row between"><div class="row"><div class="seg"><button data-act="filter" data-v="pend" aria-pressed="${S.filter==='pend'}">Por revisar</button><button data-act="filter" data-v="all" aria-pressed="${S.filter==='all'}">Todas</button></div>
+  <select id="probFilter" aria-label="Filtrar por problema" style="width:auto;max-width:100%"><option value="">Todos los problemas</option>${S.problemas.map(p=>`<option value="${p.id}" ${S.probFilter===p.id?'selected':''}>${esc(p.titulo)}</option>`).join('')}</select></div>
+  <button class="btn pri" data-act="iaTodas" ${!sinIA.length||S.busy.all?'disabled':''}>${S.busy.all?'Corrigiendo…':`Corregir con IA (${sinIA.length})`}</button></div>`;
+  if(!subs.length)return h+`<div class="empty"><b>Todavía no hay entregas</b>Publica un problema en la pestaña Problemas y da a tus alumnos su usuario.</div>`;
+  if(!list.length)return h+`<div class="empty"><b>Todo revisado</b>No quedan entregas pendientes con este filtro.</div>`;
+  for(const s of list){
+    const k=s.e.id,d=S.rev[k]||{},c=s.c;
+    const nota=d.nota??(s.n?s.n.nota:c?c.nota:''),com=d.comentario??(s.n?s.n.comentario:c?c.comentario:'');
+    const [lab,cls]=EST[s.st];const al=S.perfiles[s.e.alumno_id]||{};
+    h+=`<article class="card"><div class="row between"><div><h3>${esc(nombreDe(s.e.alumno_id))}${al.grupo?` <span class="muted small">· ${esc(al.grupo)}</span>`:''}</h3>
+    <div class="small muted">${esc(s.p.titulo)} · enviada ${fmtD(s.e.enviada_at)}</div></div><span class="pill ${cls}">${lab}</span></div>
+    <div><span class="label">Respuesta del alumno</span><div class="answer">${esc(s.e.respuesta)}</div></div>`;
+    if(c){
+      const errs=Array.isArray(c.errores)?c.errores:[];
+      h+=`<div class="ai"><div class="row between"><span class="label">Propuesta de la IA</span><span class="row"><span class="small muted">confianza ${esc(c.confianza||'—')}</span><span class="score">${fmtN(c.nota)} / ${fmtN(s.p.puntos)}</span></span></div>
+      <div class="stmt">${esc(c.comentario)}</div>${errs.length?`<ul class="small">${errs.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+      ${c.nota_profesor?`<div class="small"><b>Para ti:</b> ${esc(c.nota_profesor)}</div>`:''}
+      ${s.st==='changed'?`<div class="small" style="color:var(--red)">El alumno cambió su respuesta después de esta corrección.</div>`:''}</div>`;
+    }
+    h+=`<div class="scorerow"><label class="f" for="nt-${k}">Nota<span class="h">sobre ${fmtN(s.p.puntos)}</span><input type="number" step="0.25" min="0" max="${s.p.puntos}" id="nt-${k}" data-rev="${k}" data-f="nota" value="${esc(nota)}"></label>
+    <label class="f" for="cm-${k}">Comentario para el alumno<textarea id="cm-${k}" data-rev="${k}" data-f="comentario" style="min-height:80px">${esc(com)}</textarea></label></div>
+    <div class="row end"><button class="btn" data-act="ia" data-id="${k}" ${S.busy['ia'+k]||S.busy.all?'disabled':''}>${S.busy['ia'+k]?'Corrigiendo…':c?'Volver a corregir con IA':'Corregir con IA'}</button>
+    <button class="btn red" data-act="publicar" data-id="${k}" ${S.busy['pub'+k]?'disabled':''}>${s.n?'Actualizar nota':'Publicar nota'}</button></div></article>`;
+  }
+  return h;
+}
+function tabProblemas(){
+  let h='';
+  if(S.form){const f=S.form;
+    h+=`<section class="card"><h2>${S.editing?'Editar problema':'Nuevo problema'}</h2>
+    <label class="f" for="pf-titulo">Título<input type="text" id="pf-titulo" data-form="titulo" value="${esc(f.titulo)}"></label>
+    <label class="f" for="pf-enunciado">Enunciado <span class="h">Lo verán los alumnos. Fórmulas entre $…$, por ejemplo $\\frac{3}{4}$.</span><textarea id="pf-enunciado" data-form="enunciado">${esc(f.enunciado)}</textarea></label>
+    <div><span class="label">Vista previa del enunciado</span><div class="preview stmt" id="pf-prev">${esc(f.enunciado)}</div></div>
+    <div class="grid2"><label class="f" for="pf-solucion">Solución de referencia <span class="h">Solo la ven los profesores y la IA.</span><textarea id="pf-solucion" data-form="solucion">${esc(f.solucion)}</textarea></label>
+    <label class="f" for="pf-criterios">Criterios de corrección <span class="h">Cómo repartir los puntos. Solo profesores e IA.</span><textarea id="pf-criterios" data-form="criterios">${esc(f.criterios)}</textarea></label></div>
+    <div class="row"><label class="f" for="pf-puntos" style="width:140px">Puntos<input type="number" min="0.25" step="0.25" id="pf-puntos" data-form="puntos" value="${esc(f.puntos)}"></label>
+    <label class="row small" for="pf-abierto" style="gap:8px;margin-top:20px"><input type="checkbox" id="pf-abierto" data-form="abierto" ${f.abierto?'checked':''}> Abierto a respuestas</label></div>
+    <div class="row end"><button class="btn ghost" data-act="cancelar">Cancelar</button><button class="btn pri" data-act="guardarProblema" ${S.busy.save?'disabled':''}>${S.editing?'Guardar cambios':'Publicar problema'}</button></div></section>`;
+  }else{
+    h+=`<div class="row between"><span class="muted small">${S.problemas.length} problemas</span><button class="btn pri" data-act="nuevoProblema">Nuevo problema</button></div>`;
+  }
+  if(!S.problemas.length&&!S.form)return h+`<div class="empty"><b>Aún no hay problemas</b>Pulsa «Nuevo problema» para escribir el primero, con su solución y sus criterios.</div>`;
+  for(const p of S.problemas){const k=S.claves[p.id]||{};
+    const n=S.entregas.filter(e=>e.problema_id===p.id).length;
+    h+=`<article class="card"><div class="row between"><h3>${esc(p.titulo)}</h3><div class="row"><span class="pill ${p.abierto?'p-green':'p-grey'}">${p.abierto?'Abierto':'Cerrado'}</span><span class="score small muted">${fmtN(p.puntos)} pt</span></div></div>
+    <div class="stmt">${esc(p.enunciado)}</div>
+    <details><summary class="small muted">Solución y criterios (solo profesores)</summary><div class="stmt small" style="margin-top:8px"><b>Solución:</b> ${esc(k.solucion||'—')}\n<b>Criterios:</b> ${esc(k.criterios||'—')}</div></details>
+    <div class="row between"><span class="small muted">${n} entregas</span><div class="row">
+    ${S.confirmDel===p.id?`<span class="small" style="color:var(--red)">¿Borrar el problema y sus ${n} entregas?</span><button class="btn ghost" data-act="noBorrar">No</button><button class="btn red" data-act="borrar" data-pid="${p.id}">Sí, borrar</button>`:
+    `<button class="btn ghost" data-act="pedirBorrar" data-pid="${p.id}">Borrar</button><button class="btn" data-act="abrirCerrar" data-pid="${p.id}">${p.abierto?'Cerrar':'Abrir'}</button><button class="btn" data-act="editar" data-pid="${p.id}">Editar</button>`}</div></div></article>`;
+  }
+  return h;
+}
+function tabAlumnos(){
+  const nv=S.nuevo;
+  let h=`<section class="card"><h2>Dar de alta un alumno</h2>
+  <div class="grid3"><label class="f" for="na-nombre">Nombre y apellidos<input type="text" id="na-nombre" data-nuevo="nombre" value="${esc(nv.nombre)}"></label>
+  <label class="f" for="na-grupo">Grupo <span class="h">Opcional</span><input type="text" id="na-grupo" data-nuevo="grupo" value="${esc(nv.grupo)}"></label>
+  <label class="f" for="na-usuario">Usuario <span class="h">Con lo que entrará</span><input type="text" id="na-usuario" data-nuevo="usuario" autocapitalize="none" spellcheck="false" value="${esc(nv.usuario)}" placeholder="${esc(sugerirUsuario(nv.nombre)||'ana.garcia')}"></label></div>
+  <div class="row end"><button class="btn pri" data-act="crearAlumno" ${S.busy.crear?'disabled':''}>${S.busy.crear?'Creando…':'Crear alumno'}</button></div></section>`;
+  if(S.credenciales){const c=S.credenciales;
+    h+=`<div class="ok"><span class="label">Apunta estos datos y dáselos a ${esc(c.nombre)}</span>
+    <div>Usuario: <b class="mono">${esc(c.usuario)}</b></div><div>Contraseña: <b class="mono">${esc(c.clave)}</b></div>
+    <div class="small muted">La contraseña no se puede volver a ver. Si se pierde, genera una nueva.</div>
+    <div class="row"><button class="btn small" data-act="copiar">Copiar</button><button class="btn ghost small" data-act="cerrarCred">Hecho</button></div></div>`;
+  }
+  const al=Object.values(S.perfiles).filter(p=>p.rol==='alumno').sort((a,b)=>(a.grupo||'').localeCompare(b.grupo||'','es')||(a.nombre||'').localeCompare(b.nombre||'','es'));
+  if(!al.length)return h+`<div class="empty"><b>Aún no hay alumnos</b>Escribe arriba el nombre del primero y pulsa «Crear alumno».</div>`;
+  h+=`<div class="tblwrap"><table><thead><tr><th>Alumno</th><th>Grupo</th><th>Usuario</th><th>Entregas</th><th></th></tr></thead><tbody>`;
+  for(const p of al){const n=S.entregas.filter(e=>e.alumno_id===p.id).length;
+    h+=`<tr><td>${esc(p.nombre||'—')}</td><td>${esc(p.grupo||'')}</td><td class="mono">${esc(usuarioDe(p.id)||'…')}</td><td class="num">${n}</td>
+    <td><button class="btn ghost small" data-act="nuevaClave" data-id="${p.id}" ${S.busy['cl'+p.id]?'disabled':''}>Nueva contraseña</button></td></tr>`;}
+  return h+`</tbody></table></div>`;
+}
+function tabNotas(){
+  const al=Object.values(S.perfiles).filter(p=>p.rol==='alumno').sort((a,b)=>(a.nombre||'').localeCompare(b.nombre||'','es'));
+  if(!al.length)return `<div class="empty"><b>Sin alumnos todavía</b>Dalos de alta en la pestaña Alumnos.</div>`;
+  const ps=S.problemas;
+  let h=`<div class="tblwrap"><table><thead><tr><th>Alumno</th>${ps.map(p=>`<th title="${esc(p.titulo)}">${esc(p.titulo.length>18?p.titulo.slice(0,17)+'…':p.titulo)}</th>`).join('')}<th>Total</th></tr></thead><tbody>`;
+  for(const a of al){let tot=0,max=0;
+    h+=`<tr><td>${esc(a.nombre||'—')}</td>`+ps.map(p=>{const e=S.entregas.find(x=>x.alumno_id===a.id&&x.problema_id===p.id),n=e&&S.notas[e.id];
+      if(n){tot+=Number(n.nota)||0;max+=Number(p.puntos)||0;return `<td class="num">${fmtN(n.nota)}</td>`}
+      return `<td class="num muted">${e?'·':'—'}</td>`}).join('')+`<td class="num"><b>${fmtN(tot)}</b> <span class="muted">/ ${fmtN(max)}</span></td></tr>`;}
+  return h+`</tbody></table></div><p class="small muted" style="margin:0">— sin entregar · entregado sin nota publicada. El total suma solo las notas publicadas.</p>`;
+}
+
+/* ---------- eventos ---------- */
+const prevT={};
+function livePreview(id,v){clearTimeout(prevT[id]);prevT[id]=setTimeout(()=>{const n=document.getElementById(id);if(!n)return;n.textContent=v;typeset(n)},350)}
+app.addEventListener('input',e=>{const t=e.target;
+  if(t.dataset.draft){S.drafts[t.dataset.draft]=t.value;livePreview('prev-'+t.dataset.draft,t.value)}
+  else if(t.dataset.rev){const k=t.dataset.rev;S.rev[k]={...(S.rev[k]||{}),[t.dataset.f]:t.value}}
+  else if(t.dataset.form&&S.form){S.form[t.dataset.form]=t.type==='checkbox'?t.checked:t.value;if(t.dataset.form==='enunciado')livePreview('pf-prev',t.value)}
+  else if(t.dataset.nuevo){S.nuevo[t.dataset.nuevo]=t.value;if(t.dataset.nuevo==='nombre'){const u=$('#na-usuario');if(u)u.placeholder=sugerirUsuario(t.value)||'ana.garcia'}}
+});
+app.addEventListener('change',e=>{const t=e.target;if(t.id==='probFilter'){S.probFilter=t.value;render()}if(t.dataset.form==='abierto'&&S.form)S.form.abierto=t.checked});
+app.addEventListener('submit',async e=>{if(e.target.id!=='loginForm')return;e.preventDefault();
+  let u=$('#lg-user').value.trim().toLowerCase(),pw=$('#lg-pass').value;
+  if(!u||!pw){S.loginErr='Escribe tu usuario y tu contraseña.';return render()}
+  if(!u.includes('@'))u=u+'@'+S.cfg.dominio;
+  S.busy.login=true;S.loginErr='';render();
+  const {data,error}=await sb.auth.signInWithPassword({email:u,password:pw});
+  delete S.busy.login;
+  if(error){S.loginErr='Usuario o contraseña incorrectos.';return render()}
+  S.session=data.session;await entrar();
+});
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-act]');if(!b)return;const {act,v,pid,id}=b.dataset;
+  try{switch(act){
+    case 'salir':await sb.auth.signOut();S.perfil=null;break;
+    case 'recargar':await cargar();toast('Actualizado');break;
+    case 'tab':S.tab=v;S.confirmDel=null;break;
+    case 'filter':S.filter=v;break;
+    case 'enviar':await enviar(pid);break;
+    case 'nuevoProblema':S.editing=null;S.form={titulo:'',enunciado:'',solucion:'',criterios:'',puntos:'10',abierto:true};break;
+    case 'editar':{const p=S.problemas.find(x=>x.id===pid),k=S.claves[pid]||{};S.editing=pid;S.form={titulo:p.titulo,enunciado:p.enunciado,solucion:k.solucion||'',criterios:k.criterios||'',puntos:String(p.puntos),abierto:!!p.abierto};window.scrollTo(0,0);break}
+    case 'cancelar':S.form=null;S.editing=null;break;
+    case 'guardarProblema':await guardarProblema();break;
+    case 'abrirCerrar':{const p=S.problemas.find(x=>x.id===pid);const r=await sb.from('problemas').update({abierto:!p.abierto}).eq('id',pid);if(r.error)throw r.error;toast(p.abierto?'Problema cerrado':'Problema abierto');await cargar();break}
+    case 'pedirBorrar':S.confirmDel=pid;break;
+    case 'noBorrar':S.confirmDel=null;break;
+    case 'borrar':{const r=await sb.from('problemas').delete().eq('id',pid);if(r.error)throw r.error;S.confirmDel=null;toast('Problema borrado');await cargar();break}
+    case 'ia':await corregirIA(id);await cargar();toast('Propuesta de la IA lista. Revísala y publica la nota.');break;
+    case 'iaTodas':await corregirTodas();break;
+    case 'publicar':await publicar(id);break;
+    case 'crearAlumno':await crearAlumno();break;
+    case 'nuevaClave':await nuevaClave(id);break;
+    case 'copiar':{const c=S.credenciales;const t=`Usuario: ${c.usuario}\nContraseña: ${c.clave}\nEntra en: ${location.origin}`;try{await navigator.clipboard.writeText(t);toast('Copiado')}catch(_){toast('No se pudo copiar. Selecciona el texto a mano.')}break}
+    case 'cerrarCred':S.credenciales=null;break;
+  }}catch(err){console.warn(err);toast(err.message||'No se ha podido completar. Vuelve a intentarlo.')}
+  render();
+});
+
+/* ---------- acciones ---------- */
+async function enviar(pid){
+  const p=S.problemas.find(x=>x.id===pid),e=S.entregas.find(x=>x.problema_id===pid);
+  const texto=(S.drafts[pid]??(e?e.respuesta:'')).trim();
+  if(!texto)return toast('Escribe tu respuesta antes de enviarla');
+  if(texto.length>8000)return toast('La respuesta es demasiado larga (máximo 8.000 caracteres)');
+  S.busy['s'+pid]=true;render();
+  try{
+    const r=e?await sb.from('entregas').update({respuesta:texto}).eq('id',e.id).select()
+             :await sb.from('entregas').insert({problema_id:pid,respuesta:texto}).select();
+    if(r.error)throw new Error(p&&!p.abierto?'Este problema ya está cerrado.':'No se ha podido enviar. Vuelve a intentarlo.');
+    if(!r.data||!r.data.length)throw new Error('Ya no puedes cambiar esta respuesta: el profesor ha publicado la nota o ha cerrado el problema.');
+    delete S.drafts[pid];toast('Respuesta enviada');await cargar();
+  }finally{delete S.busy['s'+pid]}
+}
+async function guardarProblema(){const f=S.form;
+  if(!f.titulo.trim()||!f.enunciado.trim())return toast('El problema necesita título y enunciado');
+  const pts=parseFloat(String(f.puntos).replace(',','.'));if(!(pts>0))return toast('Indica cuántos puntos vale');
+  S.busy.save=true;render();
+  try{const fila={titulo:f.titulo.trim(),enunciado:f.enunciado.trim(),puntos:pts,abierto:!!f.abierto};let id=S.editing;
+    if(id){const r=await sb.from('problemas').update(fila).eq('id',id);if(r.error)throw r.error}
+    else{const r=await sb.from('problemas').insert(fila).select().single();if(r.error)throw r.error;id=r.data.id}
+    const r2=await sb.from('claves').upsert({problema_id:id,solucion:f.solucion.trim(),criterios:f.criterios.trim()});if(r2.error)throw r2.error;
+    toast(S.editing?'Cambios guardados':'Problema publicado');S.form=null;S.editing=null;await cargar();
+  }finally{delete S.busy.save}
+}
+async function corregirIA(id){S.busy['ia'+id]=true;render();
+  try{await api('/api/corregir',{method:'POST',body:JSON.stringify({entrega_id:id})});delete S.rev[id]}
+  finally{delete S.busy['ia'+id]}
+}
+async function corregirTodas(){
+  const list=todas().filter(s=>(s.st==='new'||s.st==='changed')&&(!S.probFilter||s.p.id===S.probFilter));
+  S.busy.all=true;render();let ok=0,ultimoError='';
+  try{for(const s of list){try{await corregirIA(s.e.id);ok++}catch(e){ultimoError=e.message;if(/clave|sesión|profesores/i.test(e.message))break}}}
+  finally{delete S.busy.all}
+  await cargar();
+  toast(ok===list.length?`${ok} entregas corregidas por la IA. Revisa y publica.`:`${ok} de ${list.length} corregidas. ${ultimoError}`);
+}
+async function publicar(id){
+  const e=S.entregas.find(x=>x.id===id),p=S.problemas.find(x=>x.id===e.problema_id),c=S.correcciones[id],n=S.notas[id],d=S.rev[id]||{};
+  const raw=d.nota??(n?n.nota:c?c.nota:'');const nota=parseFloat(String(raw).replace(',','.'));
+  if(isNaN(nota)||nota<0||nota>Number(p.puntos))return toast(`Pon una nota entre 0 y ${fmtN(p.puntos)}`);
+  const com=String(d.comentario??(n?n.comentario:c?c.comentario:'')).trim();
+  S.busy['pub'+id]=true;render();
+  try{const r=await sb.from('notas').upsert({entrega_id:id,nota,comentario:com,publicada_at:new Date().toISOString()});if(r.error)throw r.error;
+    delete S.rev[id];toast('Nota publicada para '+nombreDe(e.alumno_id));await cargar()}
+  finally{delete S.busy['pub'+id]}
+}
+async function crearAlumno(){const nv=S.nuevo;
+  if(!nv.nombre.trim())return toast('Escribe el nombre del alumno');
+  S.busy.crear=true;render();
+  try{const d=await api('/api/alumnos',{method:'POST',body:JSON.stringify({accion:'crear',nombre:nv.nombre,grupo:nv.grupo,usuario:nv.usuario||sugerirUsuario(nv.nombre)})});
+    S.credenciales={nombre:d.nombre,usuario:d.usuario,clave:d.clave};S.nuevo={nombre:'',grupo:nv.grupo,usuario:''};await cargar()}
+  finally{delete S.busy.crear}
+}
+async function nuevaClave(id){S.busy['cl'+id]=true;render();
+  try{const d=await api('/api/alumnos',{method:'POST',body:JSON.stringify({accion:'clave',id})});
+    S.credenciales={nombre:d.nombre,usuario:usuarioDe(id),clave:d.clave};window.scrollTo(0,0)}
+  finally{delete S.busy['cl'+id]}
+}
+</script>
+</body>
+</html>
